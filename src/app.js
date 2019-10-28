@@ -1,6 +1,8 @@
 import express from 'express';
 import routes from './routes';
 
+import './database';
+
 class App {
   constructor() {
     this.server = express();
@@ -17,5 +19,9 @@ class App {
     this.server.use(routes);
   }
 }
+
+process.on('SIGINT', () => {
+  process.exit();
+});
 
 export default new App().server;
