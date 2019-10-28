@@ -4,9 +4,9 @@ module.exports = {
   username: 'postgres',
   password: 'docker',
   database: 'Gympoint',
-  definde: {
+  define: {
     timestamps: true,
     underscored: true,
-    underscorelAll: true,
+    underscoredAll: true,
   },
 };
