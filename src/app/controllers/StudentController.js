@@ -12,9 +12,15 @@ class StudentController {
       password: Yup.string()
         .required()
         .min(6),
-      age: Yup.number().required(),
-      weight: Yup.number().required(),
-      height: Yup.number().required(),
+      age: Yup.number()
+        .positive()
+        .required(),
+      weight: Yup.number()
+        .positive()
+        .required(),
+      height: Yup.number()
+        .positive()
+        .required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -63,9 +69,9 @@ class StudentController {
       confirmPassword: Yup.string().when('password', (password, field) =>
         password ? field.required().oneOf([Yup.ref('password')]) : field
       ),
-      age: Yup.number(),
-      weight: Yup.number(),
-      height: Yup.number(),
+      age: Yup.number().positive(),
+      weight: Yup.number().positive(),
+      height: Yup.number().positive(),
     });
 
     if (!(await schema.isValid(req.body))) {
