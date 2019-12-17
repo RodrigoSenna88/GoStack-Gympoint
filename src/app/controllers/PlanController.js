@@ -36,6 +36,30 @@ class PlanController {
     const plans = await Plan.findAll();
     return res.json(plans);
   }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      title: Yup.string(),
+      duration: Yup.number().positive(),
+      price: Yup.number().positive(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const plan = await Plan.update(req.params.id);
+
+    return res.json(plan);
+  }
+
+  async delete(req, res) {
+    const plan = await Plan.findByPk(req.params.id);
+
+    await plan.destroy();
+
+    return res.json(plan);
+  }
 }
 
 export default new PlanController();
