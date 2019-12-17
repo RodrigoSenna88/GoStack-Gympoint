@@ -31,6 +31,11 @@ class PlanController {
       price,
     });
   }
+
+  async index(req, res) {
+    const plans = await Plan.findAll();
+    return res.json(plans);
+  }
 }
 
 export default new PlanController();
