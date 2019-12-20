@@ -48,7 +48,13 @@ class PlanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const plan = await Plan.update(req.params.id);
+    const plan = await Plan.findByPk(req.params.id);
+
+    if (!plan) {
+      return res.status(404).json({ error: 'Plan not found.' });
+    }
+
+    await plan.update(req.body);
 
     return res.json(plan);
   }
