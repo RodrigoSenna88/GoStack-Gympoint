@@ -26,5 +26,6 @@ routes.delete('/plans/:id', PlanController.delete);
 
 routes.post('/registrations', RegistrationController.store);
 routes.get('/registrations', RegistrationController.index);
+routes.delete('/registrations/:id', RegistrationController.delete);
 
 export default routes;

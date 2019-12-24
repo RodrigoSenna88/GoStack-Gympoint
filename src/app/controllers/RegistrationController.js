@@ -52,6 +52,14 @@ class RegistrationController {
     const registrations = await Registration.findAll();
     return res.json(registrations);
   }
+
+  async delete(req, res) {
+    const registration = await Registration.findByPk(req.params.id);
+
+    await registration.destroy();
+
+    return res.json(registration);
+  }
 }
 
 export default new RegistrationController();
