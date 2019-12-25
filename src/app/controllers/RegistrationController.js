@@ -53,6 +53,30 @@ class RegistrationController {
     return res.json(registrations);
   }
 
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      student_id: Yup.number(),
+      plan_id: Yup.number().positive(),
+      start_date: Yup.date(),
+      end_date: Yup.date(),
+      price: Yup.number().positive(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const registration = await Registration.findByPk(req.params.id);
+
+    if (!registration) {
+      return res.status(404).json({ error: 'Registration not found.' });
+    }
+
+    await registration.update(req.body);
+
+    return res.json(registration);
+  }
+
   async delete(req, res) {
     const registration = await Registration.findByPk(req.params.id);
 
