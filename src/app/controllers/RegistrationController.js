@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { startOfDay, addMonths, parseISO, isAfter } from 'date-fns';
 
 import Registration from '../models/Registration';
 import Student from '../models/Student';
@@ -7,10 +8,8 @@ import Plan from '../models/Plan';
 class RegistrationController {
   async store(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number({
-        where: { Student: req.params.student_id },
-      }).required(),
-      plan_id: Yup.number({ where: { Plan: req.params.plan_id } })
+      student_id: Yup.number().required(),
+      plan_id: Yup.number()
         .positive()
         .required(),
       start_date: Yup.date().required(),
@@ -23,29 +22,50 @@ class RegistrationController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
+
+    const { student_id, plan_id, start_date, end_date, price } = req.body;
+
     const registerExists = await Registration.findOne({
-      where: { student_id: req.body.student_id },
+      where: { student_id },
     });
 
     if (registerExists) {
       return res.status(400).json({ error: 'Studens already registred.' });
     }
 
-    const {
-      student_id,
-      plan_id,
-      start_date,
-      end_date,
-      price,
-    } = await Registration.create(req.body);
+    // verificar se estudante existe
 
-    return res.json({
-      student_id,
-      plan_id,
-      start_date,
-      end_date,
-      price,
+    const student = await Student.findByPk(student_id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not found.' });
+    }
+
+    // verificar se o plan existe
+
+    const planExists = await Plan.findByPk(plan_id);
+
+    if (!planExists) {
+      return res.status(400).json({ error: 'Plan does not found.' });
+    }
+
+    // verificar a data
+
+    const past = isAfter(parseISO(start_date), new Date(startOfDay));
+
+    if (!past) {
+      return res.json({ error: 'Start date is incorrect.' });
+    }
+    //
+    const conclusion = addMonths(parseISO(start_date), Plan.duration);
+
+    const Price = Plan.duration * Plan.price;
+
+    const register = await Registration.create(req.body, {
+      where: { price: Price, end_date: conclusion },
     });
+
+    return res.json(register);
   }
 
   async index(req, res) {
