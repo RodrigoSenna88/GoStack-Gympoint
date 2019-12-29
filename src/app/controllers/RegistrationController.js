@@ -23,15 +23,7 @@ class RegistrationController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date, end_date, price } = req.body;
-
-    const registerExists = await Registration.findOne({
-      where: { student_id },
-    });
-
-    if (registerExists) {
-      return res.status(400).json({ error: 'Studens already registred.' });
-    }
+    const { student_id, plan_id, start_date } = req.body;
 
     // verificar se estudante existe
 
