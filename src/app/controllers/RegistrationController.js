@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { startOfDay, addMonths, parseISO, isAfter } from 'date-fns';
+import { addMonths, parseISO, isAfter } from 'date-fns';
 
 import Registration from '../models/Registration';
 import Student from '../models/Student';
@@ -23,7 +23,7 @@ class RegistrationController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date } = req.body;
+    const { student_id, plan_id, start_date, end_date, price } = req.body;
 
     // verificar se estudante existe
 
@@ -43,19 +43,26 @@ class RegistrationController {
 
     // verificar a data
 
-    const past = isAfter(parseISO(start_date), new Date(startOfDay));
+    const isFuture = isAfter(parseISO(start_date), new Date());
 
-    if (!past) {
+    if (!isFuture) {
       return res.json({ error: 'Start date is incorrect.' });
     }
+
     //
     const conclusion = addMonths(parseISO(start_date), Plan.duration);
 
+    if (conclusion !== end_date) {
+      return res.json({ error: 'End date is incorrect.' });
+    }
+
     const Price = Plan.duration * Plan.price;
 
-    const register = await Registration.create(req.body, {
-      where: { price: Price, end_date: conclusion },
-    });
+    if (Price !== price) {
+      return res.json({ error: 'Price is incorrect.' });
+    }
+
+    const register = await Registration.create(req.body);
 
     return res.json(register);
   }
