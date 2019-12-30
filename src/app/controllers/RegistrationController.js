@@ -13,17 +13,13 @@ class RegistrationController {
         .positive()
         .required(),
       start_date: Yup.date().required(),
-      end_date: Yup.date().required(),
-      price: Yup.number()
-        .positive()
-        .required(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date, end_date, price } = req.body;
+    const { student_id, plan_id, start_date } = req.body;
 
     // verificar se estudante existe
 
@@ -49,20 +45,23 @@ class RegistrationController {
       return res.json({ error: 'Start date is incorrect.' });
     }
 
-    //
-    const conclusion = addMonths(parseISO(start_date), Plan.duration);
+    // criação do end_date em função do plano
 
-    if (conclusion !== end_date) {
-      return res.json({ error: 'End date is incorrect.' });
+    const end_date = addMonths(parseISO(start_date), Plan.duration);
+
+    // criação do preço total do plano
+
+    const price = Plan.duration * Plan.price;
+
+    // verificação se matricula existe
+
+    const registerExists = await Registration.findByPk(student_id);
+
+    if (registerExists) {
+      return res.status(400).json({ error: 'Registrations already exists.' });
     }
 
-    const Price = Plan.duration * Plan.price;
-
-    if (Price !== price) {
-      return res.json({ error: 'Price is incorrect.' });
-    }
-
-    const register = await Registration.create(req.body);
+    const register = await Registration.create(req.body, end_date, price);
 
     return res.json(register);
   }

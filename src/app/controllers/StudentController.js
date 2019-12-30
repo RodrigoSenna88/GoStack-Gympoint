@@ -99,6 +99,10 @@ class StudentController {
 
     return res.json({ id, name, email, age, weight, height, provider });
   }
-}
 
+  async index(req, res) {
+    const students = await Student.findAll();
+    return res.json(students);
+  }
+}
 export default new StudentController();
