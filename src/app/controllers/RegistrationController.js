@@ -5,6 +5,8 @@ import Registration from '../models/Registration';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
 
+import Mail from '../../lib/Mail';
+
 class RegistrationController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -61,7 +63,20 @@ class RegistrationController {
       return res.status(400).json({ error: 'Registrations already exists.' });
     }
 
-    const register = await Registration.create(req.body, end_date, price);
+    const register = await Registration.create(req.body, end_date, price, {
+      include: [
+        {
+          model: Student,
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Matrícula realizada.',
+      text: 'Sua matrícula na GymPint foi realizada com sucesso!',
+    });
 
     return res.json(register);
   }
