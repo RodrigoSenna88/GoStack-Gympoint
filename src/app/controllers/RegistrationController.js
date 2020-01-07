@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { addMonths, parseISO, isAfter } from 'date-fns';
+import { addMonths, parseISO, isAfter, format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import Registration from '../models/Registration';
 import Student from '../models/Student';
@@ -69,13 +70,28 @@ class RegistrationController {
           model: Student,
           attributes: ['name', 'email'],
         },
+        {
+          model: Plan,
+          attributes: ['title', 'duration', 'price'],
+        },
       ],
     });
 
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula realizada.',
-      text: 'Sua matrícula na GymPint foi realizada com sucesso!',
+      template: 'registrations',
+      context: {
+        student: student.name,
+        plan: Plan.title,
+        duration: Plan.duration,
+        price: Plan.price,
+        price_total: register.price,
+        start: format(register.start_date, "'dia' dd 'de' MMMM'", {
+          locale: pt,
+        }),
+        end: register.end_date,
+      },
     });
 
     return res.json(register);
