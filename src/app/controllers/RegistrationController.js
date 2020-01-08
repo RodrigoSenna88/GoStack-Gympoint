@@ -34,9 +34,9 @@ class RegistrationController {
 
     // verificar se o plan existe
 
-    const planExists = await Plan.findByPk(plan_id);
+    const plan = await Plan.findByPk(plan_id);
 
-    if (!planExists) {
+    if (!plan) {
       return res.status(400).json({ error: 'Plan does not found.' });
     }
 
@@ -83,9 +83,9 @@ class RegistrationController {
       template: 'registrations',
       context: {
         student: student.name,
-        plan: Plan.title,
-        duration: Plan.duration,
-        price: Plan.price,
+        plan: plan.title,
+        duration: plan.duration,
+        price: plan.price,
         price_total: register.price,
         start: format(register.start_date, "'dia' dd 'de' MMMM'", {
           locale: pt,
