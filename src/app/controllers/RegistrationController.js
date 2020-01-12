@@ -64,24 +64,13 @@ class RegistrationController {
       return res.status(400).json({ error: 'Registrations already exists.' });
     }
 
-    const registration = await Registration.create(
-      { student_id, plan_id, start_date, end_date, price },
-
-      {
-        include: [
-          {
-            model: Student,
-            as: 'student',
-            attributes: ['name', 'email'],
-          },
-          {
-            model: Plan,
-            as: 'plan',
-            attributes: ['title', 'duration', 'price'],
-          },
-        ],
-      }
-    );
+    const registration = await Registration.create({
+      student_id,
+      plan_id,
+      start_date,
+      end_date,
+      price,
+    });
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula realizada.',

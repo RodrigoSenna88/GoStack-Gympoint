@@ -8,7 +8,7 @@ class Registration extends Model {
         plan_id: Sequelize.INTEGER,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
-        price: Sequelize.INTEGER,
+        price: Sequelize.FLOAT,
       },
       {
         sequelize,

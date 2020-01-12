@@ -30,10 +30,7 @@ module.exports = {
         allowNull: false,
       },
       price: {
-        type: Sequelize.INTEGER,
-        references: { model: 'plans', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       created_at: {
