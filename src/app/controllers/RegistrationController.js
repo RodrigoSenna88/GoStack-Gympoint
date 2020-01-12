@@ -52,13 +52,9 @@ class RegistrationController {
 
     const end_date = addMonths(new Date(start_date), plan.duration);
 
-    console.log(end_date);
-
     // criação do preço total do plano
 
     const price = plan.duration * plan.price;
-
-    console.log(price);
 
     // verificação se matricula existe
 
@@ -68,19 +64,24 @@ class RegistrationController {
       return res.status(400).json({ error: 'Registrations already exists.' });
     }
 
-    const registration = await Registration.create(req.body, end_date, price, {
-      include: [
-        {
-          model: Student,
-          attributes: ['name', 'email'],
-        },
-        {
-          model: Plan,
-          attributes: ['title', 'duration', 'price'],
-        },
-      ],
-    });
+    const registration = await Registration.create(
+      { student_id, plan_id, start_date, end_date, price },
 
+      {
+        include: [
+          {
+            model: Student,
+            as: 'student',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Plan,
+            as: 'plan',
+            attributes: ['title', 'duration', 'price'],
+          },
+        ],
+      }
+    );
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula realizada.',
@@ -94,7 +95,9 @@ class RegistrationController {
         start: format(registration.start_date, "'dia' dd 'de' MMMM'", {
           locale: pt,
         }),
-        end: registration.end_date,
+        end: format(registration.end_date, "'dia' dd 'de' MMMM'", {
+          locale: pt,
+        }),
       },
     });
 
