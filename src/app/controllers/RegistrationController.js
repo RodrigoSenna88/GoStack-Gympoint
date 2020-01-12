@@ -50,11 +50,15 @@ class RegistrationController {
 
     // criação do end_date em função do plano
 
-    const end_date = addMonths(parseISO(start_date), Plan.duration);
+    const end_date = addMonths(new Date(start_date), plan.duration);
+
+    console.log(end_date);
 
     // criação do preço total do plano
 
-    const price = Plan.duration * Plan.price;
+    const price = plan.duration * plan.price;
+
+    console.log(price);
 
     // verificação se matricula existe
 
@@ -64,7 +68,7 @@ class RegistrationController {
       return res.status(400).json({ error: 'Registrations already exists.' });
     }
 
-    const register = await Registration.create(req.body, end_date, price, {
+    const registration = await Registration.create(req.body, end_date, price, {
       include: [
         {
           model: Student,
@@ -86,15 +90,15 @@ class RegistrationController {
         plan: plan.title,
         duration: plan.duration,
         price: plan.price,
-        price_total: register.price,
-        start: format(register.start_date, "'dia' dd 'de' MMMM'", {
+        price_total: registration.price,
+        start: format(registration.start_date, "'dia' dd 'de' MMMM'", {
           locale: pt,
         }),
-        end: register.end_date,
+        end: registration.end_date,
       },
     });
 
-    return res.json(register);
+    return res.json(registration);
   }
 
   async index(req, res) {

@@ -21,6 +21,15 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      end_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      price: {
+        type: Sequelize.INTEGER,
+        references: { model: 'plans', key: 'id' },
+        allowNull: false,
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
