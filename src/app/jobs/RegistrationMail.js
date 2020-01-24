@@ -12,7 +12,7 @@ class RegistrationMail {
 
     console.log('A fila executou');
 
-    await Mail.sendMail({
+    await Mail.senddMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula realizada.',
       template: 'registrations',
