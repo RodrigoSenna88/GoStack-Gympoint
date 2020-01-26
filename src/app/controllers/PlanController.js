@@ -33,7 +33,7 @@ class PlanController {
   }
 
   async index(req, res) {
-    const plans = await Plan.finAll();
+    const plans = await Plan.findAll();
     return res.json(plans);
   }
 
