@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 
 import authConfig from '../../config/auth';
 import User from '../models/User';
-import Student from '../models/Student';
 
 class SessionController {
   async store(req, res) {
@@ -43,19 +42,12 @@ class SessionController {
         }),
       });
     }
-    const student = await Student.findOne({ where: { email } });
-
-    if (!student) {
-      return res.status(401).json({ error: 'Student not found' });
-    }
-
-    if (!(await student.checkPassword(password))) {
-      return res.status(401).json({ error: 'Password does not match' });
-    }
     return res.json({
-      id,
-      name,
-      email,
+      user: {
+        id,
+        name,
+        email,
+      },
     });
   }
 }
