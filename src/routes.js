@@ -17,7 +17,7 @@ routes.post('/sessions', SessionController.store);
 routes.post('/checkins', CheckinController.store);
 routes.get('/checkins', CheckinController.index);
 
-routes.get('/helporders/:id', HelpOrderController.index);
+routes.post('/students/:id/help-orders', HelpOrderController.store);
 
 routes.use(authMiddleware);
 
@@ -35,5 +35,7 @@ routes.post('/registrations', RegistrationController.store);
 routes.get('/registrations', RegistrationController.index);
 routes.put('/registrations/:id', RegistrationController.update);
 routes.delete('/registrations/:id', RegistrationController.delete);
+
+routes.get('/students/:id/help-orders', HelpOrderController.index);
 
 export default routes;
