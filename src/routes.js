@@ -7,6 +7,7 @@ import PlanController from './app/controllers/PlanController';
 import RegistrationController from './app/controllers/RegistrationController';
 import CheckinController from './app/controllers/CheckinController';
 import HelpOrderController from './app/controllers/HelpOrderController';
+import GymHelpOrderController from './app/controllers/GymHelpOrderController';
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
@@ -36,6 +37,8 @@ routes.get('/registrations', RegistrationController.index);
 routes.put('/registrations/:id', RegistrationController.update);
 routes.delete('/registrations/:id', RegistrationController.delete);
 
+routes.get('/help-orders', GymHelpOrderController.index);
 routes.get('/students/:id/help-orders', HelpOrderController.index);
+routes.put('/help-orders/:id/answer', GymHelpOrderController.update);
 
 export default routes;
