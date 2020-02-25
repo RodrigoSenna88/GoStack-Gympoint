@@ -18,10 +18,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      anwser: {
+      answer: {
         type: Sequelize.STRING,
       },
-      anwser_at: {
+      answered_at: {
         type: Sequelize.DATE,
       },
       created_at: {

@@ -10,8 +10,6 @@ class RegistrationMail {
   async handle({ data }) {
     const { student, plan, registration } = data;
 
-    console.log('A fila executou');
-
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula realizada.',
