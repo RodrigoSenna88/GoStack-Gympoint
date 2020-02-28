@@ -38,7 +38,6 @@ class HelpOrderAnswerMail {
         answer: helpOrder.answer,
         answered_at: answerDate,
         createdAt: questionDate,
-        total: helpOrder.price,
       },
     });
   }

@@ -62,7 +62,7 @@ class HelpOrderController {
     await helporders.save();
 
     // const { id } = req.params;
-   /** const helpOrder = await HelpOrder.findByPk(id, {
+    const helpOrder = await HelpOrder.findByPk(id, {
       include: [
         {
           model: Student,
@@ -73,9 +73,9 @@ class HelpOrderController {
     });
 
     // Send answer e-mail
-    /**await Queue.add(HelpOrderAnswerMails.key, {
+    await Queue.add(HelpOrderAnswerMails.key, {
       helpOrder,
-    });*/
+    });
 
     return res.json(helporders);
   }
